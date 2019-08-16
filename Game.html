@@ -1,0 +1,48 @@
+<!doctype html>
+
+<head>
+    <title>Dino Jump</title>
+</head>
+
+<body>
+    <canvas id="gameCanvas" width="1200" height="400"></canvas>
+    <script>
+        var canvas, canvasContext;
+
+        window.onload = function() {
+            canvas = document.getElementById('gameCanvas');
+            canvasContext = canvas.getContext('2d');
+
+            setInterval(mainloop, 1000 / 50);
+        }
+
+        var playerXpos = 0;
+        var playerYpos = 400;
+        var playerSize = 20;
+        var startingPos = true;
+        
+        function mainloop() {
+            colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
+            colorRect(0, 0, 50, 50, 'red');
+
+            if (startingPos) {
+                startPos();
+                startingPos = false;
+            }
+        }
+
+        function startPos() {
+            //playerXpos = absolute center of screen
+            //playerYpos = bottom of screen up by 1 playersize
+            playerXpos = canvas.width / 2 - playerSize / 2;
+            playerYpos = canvas.height - playerSize * 2;
+
+        }
+
+        function colorRect(x, y, w, h, c) {
+            canvasContext.fillStyle = c;
+            canvasContext.fillRect(x, y, w, h);
+        }   
+
+    </script>
+</body>
