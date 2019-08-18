@@ -1,0 +1,72 @@
+<!doctype html>
+
+<head>
+    <title>Dino Jump</title>
+</head>
+
+<body>
+    <canvas id="gameCanvas" width="1200" height="400"></canvas>
+    <script>
+        var canvas, canvasContext;
+        window.onload = function() {
+            canvas = document.getElementById('gameCanvas');
+            canvasContext = canvas.getContext('2d');
+            setInterval(mainloop, 1000 / 50);
+        }
+        
+        var playerXpos = 0;
+        var playerYpos = 400;
+        var playerSize = 20;
+        var 
+        var startingPos = true;
+        const SPACE_KEY = 32;
+        const UP_KEY = 38;
+        const DOWN_KEY = 40;
+        
+        function mainloop() {
+            colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
+            colorRect(0, 0, 50, 50, 'red');
+            if (startingPos) {
+                startPos();
+                startingPos = false;
+            }
+        }
+        
+        function startPos() {
+            //playerXpos = absolute center of screen
+            //playerYpos = bottom of screen up by 1 playersize
+            playerXpos = canvas.width / 2 - playerSize / 2;
+            playerYpos = canvas.height - playerSize * 2;
+        }
+        
+            function keyPressed(evt) {
+            //            console.log(evt.keyCode);
+            if (evt.keyCode == SPACE_KEY) {
+                spaceKeyPressed = true;
+            }
+            if (evt.keyCode == DOWN_KEY) {
+                downKeyPressed = true;
+            }
+                 if (evt.keyCode == UP_KEY) {
+                upKeyPressed = true;
+            }
+        }
+        function keyReleased(evt) {
+            if (evt.keyCode == SPACE_KEY) {
+                spaceKeyPressed = false;
+            }
+            if (evt.keyCode == DOWN_KEY) {
+                downKeyPressed = false;
+            }
+             if (evt.keyCode == UP_KEY) {
+                KeyPressed = false;
+            }
+        }
+        
+        
+        function colorRect(x, y, w, h, c) {
+            canvasContext.fillStyle = c;
+            canvasContext.fillRect(x, y, w, h);
+        }   
+    </script>
+</body>
