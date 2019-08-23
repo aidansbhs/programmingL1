@@ -14,35 +14,42 @@
             canvasContext = canvas.getContext('2d');
 
             setInterval(mainloop, 1000 / 50);
-        }
+        } //end of onload
 
+        //player variables
         var playerXpos = 0;
-        var playerYpos = 400;
-        var playerSize = 20;
+        var playerYpos = 0;
+        var playerSize = 50;
+        // when game starts the player will go to starting postion
         var startingPos = true;
-        
+        const P_SIZE = 50;
+
+
+
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
-            colorRect(0, 0, 50, 50, 'red');
+            colorRect(canvas.width/3.5 - P_SIZE/2 ,canvas.height /1.2 - P_SIZE/2, P_SIZE , P_SIZE,'red');
+//            colorRect(playerXpos,playerYpos,playerSize,playerSize,'red');// player block
 
             if (startingPos) {
                 startPos();
                 startingPos = false;
             }
-        }
+        } //end of mainloop
 
-        function startPos() {
+        function startingPos() {
             //playerXpos = absolute center of screen
             //playerYpos = bottom of screen up by 1 playersize
             playerXpos = canvas.width / 2 - playerSize / 2;
-            playerYpos = canvas.height - playerSize * 2;
+            playerYpos = canvas.height / 2 - playerSize * 2;
 
-        }
+        } //end of startPos
+
 
         function colorRect(x, y, w, h, c) {
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
-        }   
+        } //end of colorRect
 
     </script>
 </body>
