@@ -14,42 +14,54 @@
             canvasContext = canvas.getContext('2d');
 
             setInterval(mainloop, 1000 / 50);
+            
+            document.addEventListener('keydown', keyPressed);
         } //end of onload
 
         //player variables
         var playerXpos = 0;
         var playerYpos = 0;
         var playerSize = 50;
+        var playerYSpeed = 0;
         // when game starts the player will go to starting postion
         var startingPos = true;
         const P_SIZE = 50;
-
-
+        const UP_KEY = 38;
+        const SPACEBAR_KEY = 32;
+        var jumpKeyPressed = false;
+        
 
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
             colorRect(canvas.width/3.5 - P_SIZE/2 ,canvas.height /1.2 - P_SIZE/2, P_SIZE , P_SIZE,'red');
 //            colorRect(playerXpos,playerYpos,playerSize,playerSize,'red');// player block
-
-            if (startingPos) {
-                startPos();
-                startingPos = false;
+            playerMove();
+            } //end of mainloop
+          
+        function keyPressed(){
+//       console.log(evt.keyCode);
+            if (evt.keyCode == UP_KEY) {
+                jumpKeyPressed = true;
             }
-        } //end of mainloop
-
-        function startingPos() {
-            //playerXpos = absolute center of screen
-            //playerYpos = bottom of screen up by 1 playersize
-            playerXpos = canvas.width / 2 - playerSize / 2;
-            playerYpos = canvas.height / 2 - playerSize * 2;
-
-        } //end of startPos
-
+            if (evt.keyCode == SPACEBAR_KEY) {
+                jumpKeyPressed = true;
+            }
+        }
+        
+        function playerMove(){
+              if(jumpKeyPressed == true){
+                  playerYpos + 
+              }
+                  
+                  playerYpos 
+            }
+        
 
         function colorRect(x, y, w, h, c) {
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
         } //end of colorRect
+        
 
     </script>
 </body>
