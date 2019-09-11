@@ -14,7 +14,7 @@
             canvasContext = canvas.getContext('2d');
 
             setInterval(mainloop, 1000 / 50);
-            
+
             document.addEventListener('keydown', keyPressed);
         } //end of onload
 
@@ -29,39 +29,40 @@
         const UP_KEY = 38;
         const SPACEBAR_KEY = 32;
         var jumpKeyPressed = false;
-        
+
 
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
-            colorRect(canvas.width/3.5 - P_SIZE/2 ,canvas.height /1.2 - P_SIZE/2, P_SIZE , P_SIZE,'red');
-//            colorRect(playerXpos,playerYpos,playerSize,playerSize,'red');// player block
-            playerMove();
-            } //end of mainloop
-          
-        function keyPressed(){
-//       console.log(evt.keyCode);
-            if (evt.keyCode == UP_KEY) {
-                jumpKeyPressed = true;
+            colorRect(canvas.width / 3.5 - P_SIZE / 2, canvas.height / 1.2 - P_SIZE / 2, P_SIZE, P_SIZE, 'red');
+            //            colorRect(playerXpos,playerYpos,playerSize,playerSize,'red');// player block
+        } //end of mainloop
+
+
+
+        function keyPressed(evt) {
+            
+            console.log(evt.keyCode) 
+            if (evt.keyCode == 38) {   
+                upArrowPressed = true; 
             }
-            if (evt.keyCode == SPACEBAR_KEY) {
-                jumpKeyPressed = true;
+            if(evt.keyCode == 32){
+                spcebarArrowPressed = true;
+            }
+        }
+        function keyReleased(evt) {
+//           console.log(evt.keyCode)
+            if (evt.keyCode == 38){
+                upArrowReleased = false;    
+            }
+            if(evt.keyCode == 38){
+                spacebarArrowReleased = false;
             }
         }
         
-        function playerMove(){
-              if(jumpKeyPressed == true){
-                  playerYpos + 
-              }
-                  
-                  playerYpos 
-            }
-        
-
-        function colorRect(x, y, w, h, c) {
-            canvasContext.fillStyle = c;
-            canvasContext.fillRect(x, y, w, h);
-        } //end of colorRect
-        
+                function colorRect(x, y, w, h, c) {
+                    canvasContext.fillStyle = c;
+                    canvasContext.fillRect(x, y, w, h);
+                } //end of colorRect
 
     </script>
 </body>
