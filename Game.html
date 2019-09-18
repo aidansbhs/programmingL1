@@ -14,23 +14,22 @@
             canvasContext = canvas.getContext('2d');
 
             setInterval(mainloop, 1000 / 50);
-
-            document.addEventListener('keydown', keyPressed);
         } //end of onload
 
         //player variables
         var playerXpos = 0;
         var playerYpos = 0;
         var playerSize = 50;
-        var playerYSpeed = 0;
+        // when game starts the player will go to starting postion
         var startingPos = true;
-        const UP_KEY = 38;
-        const SPACEBAR_KEY = 32;
+        const P_SIZE = 50;
+
+
 
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
-            colorRect(playerXpos, playerYpos, playerSize, playerSize, 'red');
-            gravity();
+            colorRect(canvas.width/3.5 - P_SIZE/2 ,canvas.height /1.2 - P_SIZE/2, P_SIZE , P_SIZE,'red');
+//            colorRect(playerXpos,playerYpos,playerSize,playerSize,'red');// player block
 
             if (startingPos) {
                 startPos();
@@ -38,46 +37,14 @@
             }
         } //end of mainloop
 
-        function startPos() {
-            playerXpos = canvas.width / 3 - playerSize / 2;
-            playerYpos = canvas.height - playerSize * 2;
+        function startingPos() {
+            //playerXpos = absolute center of screen
+            //playerYpos = bottom of screen up by 1 playersize
+            playerXpos = canvas.width / 2 - playerSize / 2;
+            playerYpos = canvas.height / 2 - playerSize * 2;
 
-        }
+        } //end of startPos
 
-        function keyPressed(evt) {
-
-            console.log(evt.keyCode)
-            if (evt.keyCode == 38) {
-                upArrowPressed = true;
-            }
-            if (evt.keyCode == 32) {
-                spacebarPressed = true;
-            }
-        }
-
-        function keyReleased(evt) {
-            //           console.log(evt.keyCode)
-            if (evt.keyCode == 38) {
-                upArrowReleased = false;
-            }
-            if (evt.keyCode == 32) {
-                spacebarReleased = false;
-            }
-        }
-
-        function gravity() {
-            if (playerYpos < canvas.height - playerSize) {
-                playerYpos -= 1; // to make player not infinitly go up
-            }
-        }
-
-        function playerJump() {
-
-            if (upArrowPressed && spacebarPressed == true) {
-                playerYSpeed = 50; //to make player jump
-            
-            }
-        }
 
         function colorRect(x, y, w, h, c) {
             canvasContext.fillStyle = c;
