@@ -3,21 +3,20 @@
 <head>
     <title>Dino Jump</title>
 </head>
-
 <body>
     <canvas id="gameCanvas" width="1200" height="400"></canvas>
     <script>
         var canvas, canvasContext;
-
         window.onload = function() {
             canvas = document.getElementById('gameCanvas');
             canvasContext = canvas.getContext('2d');
-
+            
             setInterval(mainloop, 1000 / 50);
-
+            
             document.addEventListener('keydown', keyPressed);
             document.addEventListener('keyup', keyReleased);
         } //end of onload
+        
         // variables
         var playerXpos = 0;
         var playerYpos = 0;
@@ -32,24 +31,28 @@
         const SPACEBAR_KEY = 32;
         var upArrowPressed = false;
         var spacebarPressed = false;
+        var obstacles = [];
+        var obstaclesSpeed = 0;
 
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
             colorRect(playerXpos, playerYpos, playerSize, playerSize, 'red');
             gravity();
             playerJump();
-
+            newObstacle();
+            updateObstacles();
             if (startingPos) {
                 startPos();
                 startingPos = false;
             }
+            
         } //end of mainloop
-
+        
         function startPos() {
             playerXpos = canvas.width / 3 - playerSize / 2;
             playerYpos = canvas.height - playerSize * 2;
         } //end of startPos
-
+        
         function keyPressed(evt) { //buttons that when pressed will activate player move
             console.log(evt.keyCode)
             if (evt.keyCode == 38) {
@@ -58,8 +61,9 @@
             if (evt.keyCode == 32) {
                 spacebarPressed = true;
             }
+            
         } //end of keyPressed
-
+        
         function keyReleased(evt) { //checks for when keys are released 
             if (evt.keyCode == 38) {
                 upArrowPressed = false;
@@ -67,22 +71,43 @@
             if (evt.keyCode == 32) {
                 spacebarPressed = false;
             }
+            
         } //end of keyReleased
-
-        function gravity() {         
+        
+        function gravity() {
             playerYpos += yGravity; // to make player not infinitly go up
             if (playerYpos < floor || ceiling) {
                 playerYSpeed = 0;
             }
+            
         } //end of gravity
-
+        
         function playerJump() {
-
             if (spacebarPressed || upArrowPressed) {
                 playerYpos -= 15; //to make player jump
             }
+            
         } //end of playerJump 
-
+        
+        function updateObstacles(){
+            for (var i = obstacles.length; i >= 0; i--){
+                if(obstacles[i].x)
+            }
+        }
+            function Obstacle(){
+                var x;
+                var size;
+            }
+            
+            Obstacle.prototype.draw = function(){
+                rect(x, );
+                
+            }
+        
+        function newObstacle(){
+            obstacles.push("obstacles");
+        }
+        
         function colorRect(x, y, w, h, c) {
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
