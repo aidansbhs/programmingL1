@@ -11,6 +11,13 @@
         window.onload = function() {
             canvas = document.getElementById('gameCanvas');
             canvasContext = canvas.getContext('2d');
+            
+            objectArray.push(objectRandom());
+            objectArray.push(objectRandom());
+            objectArray.push(objectRandom());
+            objectArray.push(objectRandom());
+            objectArray.push(objectRandom());
+            objectArray.push(objectRandom());
 
             setInterval(mainloop, 1000 / 50);
 
@@ -31,11 +38,24 @@
         var upArrowPressed = false;
         var spacebarPressed = false;
 
+        var objectXpos = 0;
+        var objectYpos = 0;
+        var objectSize = 0;
+        var runRandom = true;
+        var objectArray = [];
+
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
             colorRect(playerXpos, playerYpos, playerSize, playerSize, 'red');
             gravity();
             playerJump();
+            objectRandom();
+            render();
+
+            if (runRandom) {
+                objectRandom();
+                runRandom = false;
+            }
 
             if (startingPos) {
                 startPos();
@@ -43,6 +63,12 @@
             }
 
         } //end of mainloop
+        
+        function render(){
+            objectArray.forEach(function(object, index){
+                 colorRect(object.objectXpos, object.objectXpos, object.objectSize, object.objectSize, 'blue'); //player individual base off index in array
+            });
+        }
 
         function startPos() {
             playerXpos = canvas.width / 3 - playerSize / 2;
@@ -86,6 +112,15 @@
             }
         } //end of playerJump 
 
+        function objectRandom() {
+            var objectSize = Math.floor(Math.random() * (40 - 3)) + 1;
+            var newObjectItem = {
+                objectSize: objectSize,
+                objectXpos: Math.floor(Math.random() * (canvas.width - objectSize - 0)) + 0,
+                objectYpos: Math.floor(Math.random() * (canvas.height - objectSize - 0)) + 0,
+            }
+            return newObjectItem;
+        }
 
         function colorRect(x, y, w, h, c) {
             canvasContext.fillStyle = c;
