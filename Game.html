@@ -26,21 +26,16 @@
         var playerXSpeed = 0;
         var yGravity = 5;
         var startingPos = true;
-        var floor = 350;
-        var ceiling = 1150;
         const UP_KEY = 38;
         const SPACEBAR_KEY = 32;
         var upArrowPressed = false;
         var spacebarPressed = false;
-        var obstacles = [];
-        var obstaclesSpeed = 0;
 
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
             colorRect(playerXpos, playerYpos, playerSize, playerSize, 'red');
             gravity();
             playerJump();
-            floor();
 
             if (startingPos) {
                 startPos();
@@ -79,7 +74,7 @@
         function gravity() {
             playerYpos += yGravity; // to make player not infinitly go up 
             if (playerYpos > canvas.height - playerSize) {
-                yGravity = 0;
+                yGravity = 0; //floor to stop gravity pushing player past screen
             }
 
         } //end of gravity
@@ -87,21 +82,10 @@
         function playerJump() { //to make player be able to avoid objects
             if (spacebarPressed || upArrowPressed) {
                 playerYpos -= 15; //to make player jump
+                yGravity = 5; //to put gravity back on after touching ground
             }
-
         } //end of playerJump 
 
-        function floor() { //to stop player falling through screen by gravity
-            if (playerYpos >= canvas.height - playerSize) {
-                playerYSpeed = 0;
-            }
-        }//end of floor
-
-        function ceiling() { //just in case player can jump out of screen
-            if (playerYpos < canvas.height - playerSize) {
-                playerYSpeed = 0;
-            }
-        }//end of ceiling
 
         function colorRect(x, y, w, h, c) {
             canvasContext.fillStyle = c;
