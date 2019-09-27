@@ -11,13 +11,11 @@
         window.onload = function() {
             canvas = document.getElementById('gameCanvas');
             canvasContext = canvas.getContext('2d');
-            
-            objectArray.push(objectRandom());
-            objectArray.push(objectRandom());
-            objectArray.push(objectRandom());
-            objectArray.push(objectRandom());
-            objectArray.push(objectRandom());
-            objectArray.push(objectRandom());
+
+            for (var i = 0; i < 12; i++) {
+                objectArray.push(objectRandom());
+
+            }
 
             setInterval(mainloop, 1000 / 50);
 
@@ -37,9 +35,13 @@
         const SPACEBAR_KEY = 32;
         var upArrowPressed = false;
         var spacebarPressed = false;
+        var score = 0;
+        console.log(score);
 
         var objectXpos = 0;
         var objectYpos = 0;
+        var xSpeed = 4;
+        var ySpeed = 3;
         var objectSize = 0;
         var runRandom = true;
         var objectArray = [];
@@ -51,7 +53,7 @@
             playerJump();
             objectRandom();
             render();
-
+            objectMove();
             if (runRandom) {
                 objectRandom();
                 runRandom = false;
@@ -63,10 +65,33 @@
             }
 
         } //end of mainloop
-        
-        function render(){
-            objectArray.forEach(function(object, index){
-                 colorRect(object.objectXpos, object.objectXpos, object.objectSize, object.objectSize, 'blue'); //player individual base off index in array
+
+        function render() {
+            objectArray.forEach(function(object, index) {
+                colorRect(object.objectXpos, object.objectXpos,  object.objectSize, object.objectSize, 'blue'); //player individual base off index in array
+            });
+        }
+
+        function objectMove() {
+            objectArray.forEach(function(object, index) {
+                object.objectXpos = object.objectXpos + object.xSpeed;
+                object.objectYpos = object.objectypos + object.ySpeed;
+
+                if ( object.objectXpos < 0) {
+                     object.xSpeed =  object.xSpeed * -1;
+                     score++;
+                     console.log('score: ' + score);
+                    
+                }
+                if ( object.objectXpos > canvas.width - object.objectSize) {
+                     object.xSpeed =  object.xSpeed * -1;
+                }
+                if ( object.objectYpos < 0) {
+                     object.ySpeed =  object.ySpeed * -1;
+                }
+                if ( object.objectYpos > canvas.height - object.objectSize) {
+                     object.ySpeed =  object.ySpeed * -1;
+                }
             });
         }
 
@@ -118,6 +143,8 @@
                 objectSize: objectSize,
                 objectXpos: Math.floor(Math.random() * (canvas.width - objectSize - 0)) + 0,
                 objectYpos: Math.floor(Math.random() * (canvas.height - objectSize - 0)) + 0,
+                xSpeed: Math.floor(Math.random() * (10 - 0)) + 1,
+                ySpeed: Math.floor(Math.random() * (10 - 0)) + 1,
             }
             return newObjectItem;
         }
