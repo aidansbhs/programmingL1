@@ -59,7 +59,6 @@
             objectRandom();
             renderObjects();
             objectMove();
-             horizon = 400 - 40;
             
             if (runRandom) {
                 objectRandom();
@@ -72,24 +71,24 @@
             }
         } //end of mainloop
 
-        function startPos() {
+        function startPos() { //player starting position in game
             playerXpos = canvas.width / 3 - playerSize / 2;
             playerYpos = canvas.height - playerSize * 2;
         } //end of startPos
 
-        function renderObjects() {
+        function renderObjects() {//creates or draws objects on screen
             objectArray.forEach(function(object, index) {
                 colorRect(object.objectXpos, object.objectXpos, object.objectSize, object.objectSize, 'blue'); //player individual base off index in array
             });
         } //end of renderObjects
 
-        function objectMove() {
+        function objectMove() { //movement for the objects
             objectArray.forEach(function(object, index) {
                 object.objectXpos = object.objectXpos + object.xSpeed;
                 object.objectYpos = object.objectypos + object.ySpeed;
-                if (object.objectXpos < 0) {
+                if (object.objectXpos < 0) { //edge bounce
                     object.xSpeed = object.xSpeed * -1;
-                    score++;
+                    score++; //adds 1 score everytime the objects bounce
                     console.log('score: ' + score);
 
                 }
@@ -105,7 +104,7 @@
             });
         } //end of objectMove
 
-        function objectRandom() {
+        function objectRandom() { //randomly generates an object as well as it's speed and position 
             var objectSize = Math.floor(Math.random() * (40 - 3)) + 1;
             var newObjectItem = {
                 objectSize: objectSize,
@@ -173,7 +172,7 @@
                 playerYspeed += 5;
                 console.log("onGround");
             }
-        }
+        }//end of HandleTRex
 
         function colorRect(x, y, w, h, c) { //drawing canvas and player
             canvasContext.fillStyle = c;
