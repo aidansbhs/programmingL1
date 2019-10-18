@@ -1,7 +1,5 @@
 <!doctype html>
 
-<!doctype html>
-
 <head>
     <title>Dino Jump</title>
 </head>
@@ -19,7 +17,6 @@
             width: 1200px;
             height: 400px;
         }
-
     </style>
     <script>
         var canvas, canvasContext;
@@ -77,22 +74,10 @@
         while (difficulty.toLowerCase() !== 'easy' && difficulty.toLowerCase() !== 'hard') {
             difficulty = prompt("What difficulty do you want to play at, Easy or Hard")
         }
-        //        
-        //        if (difficulty == 'easy') {
-        //            Xspeed = 5;
-        //        } else {
-        //            xSpeed = 3;
-        //        }
-        //        if (difficulty == 'hard') {
-        //            Xspeed = 7;
-        //        } else {
-        //            Xspeed = 5;
-        //        }
 
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
             colorRect(playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE, 'red');
-
             gravity();
             playerJump();
             objectRandom();
@@ -100,8 +85,8 @@
             objectMove();
 
             textDraw('score: ' + score, 600, 50, 'white', )
-            colorRect(horizonXpos, horizonYpos, horizonLength, horizonWidth, 'white'); //horizon line
-
+            colorRect(horizonXpos, horizonYpos, horizonLength, horizonWidth, 'white');
+            //horizon line
             if (runRandom) {
                 objectRandom();
                 runRandom = false;
@@ -124,7 +109,7 @@
         } //end of objectDraw
 
         function objectMove() { //movement for the objects
-            objectArray.forEach(function(object, index, array) {
+            objectArray.forEach(function(object, index) {
                 object.objectXpos = object.objectXpos + object.xSpeed;
                 //                if (object.objectXpos > canvas.width - object.objectSize) {
                 //                    object.xSpeed = object.xSpeed * -1; //right edge bounce
@@ -135,8 +120,8 @@
                 }
                 if (objectCount < objectMaxCount) {
                     objectArray.push(objectRandom()); //makes new object if less than max count
+                    console.log('lag')
                 }
-
                 if (objectXpos < 0 - objectSize) {
                     objectXpos = canvas.width; //return object to start pos
                 }
@@ -146,7 +131,6 @@
         function objectRandom() { //randomly generates an object in set locations and timing
             var objectSize = Math.floor(Math.random() * (70 - 35)) + 35;
             var objectYpos = horizonYpos - objectSize; //needs to be a certain y location, the horizon line, so no math.random
-
             var newObjectItem = {
                 objectSize: objectSize,
                 objectXpos: Math.floor(Math.random() * (canvas.width - objectSize - 0)) + canvas.width,
@@ -157,9 +141,7 @@
             if (difficulty.toLocaleLowerCase() == 'easy') {
                 xSpeed = 5;
             }
-
-            objectCount += 1;
-            return newObjectItem; //returns new object vars for new objects
+            return newObjectItem;//returns new object vars for new objects
         } //end of objectRandom
 
         function horizonDraw(x, y, w, h, c) {
@@ -177,7 +159,6 @@
                 spacebarPressed = true;
             }
         } //end of keyPressed
-
         function keyReleased(evt) { //checks for when keys are released 
             if (evt.keyCode == 38) {
                 upArrowPressed = false;
@@ -188,16 +169,16 @@
         } //end of keyReleased
 
         //game functions
-        function gravity() {                                // to bring player back to ground
+        function gravity() { // to bring player back to ground
             if (yGravity > -60 && playerYpos < horizonYpos - PLAYER_SIZE) {
                 playerYpos += yGravity / 5;
                 yGravity += 2;
             }
         } //end of gravity
-            var jumping = false
+
+        var jumping = false
 
         function playerJump() { //to make player be able to avoid objects
-
             if (spacebarPressed && jumping == false || upArrowPressed && jumping == false) {
                 jumping = true
                 yGravity = -50; //jump force speed
@@ -206,9 +187,7 @@
             if (playerYpos + PLAYER_SIZE >= horizonYpos) { //cannot jump more if not on horizon line
                 playerYSpeed = 0;
                 jumping = false;
-
-            } 
-
+            }
         } //end of playerJump 
 
         function textDraw(msg, x, y, c, font) { //drawing score text
