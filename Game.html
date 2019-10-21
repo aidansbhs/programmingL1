@@ -38,6 +38,7 @@
         var playerYSpeed = 7;
         var playerXSpeed = 0;
         var yGravity = 5;
+        var jumping = false
         var startingPos = true;
         
         //control variables 
@@ -78,9 +79,11 @@
         }
         if (difficulty.toLocaleLowerCase() == 'easy') {
                 objectXspeed = 5;
-            }  else if (score >= 1000 & objectMaxCount < 2){
+            }  
+            if (score >= 1000 & objectMaxCount < 2){
                 objectXspeed = 10;
                 objectMaxCount += 1;
+                console.log('harder')
             } else {
                 objectXspeed += 1;
             }
@@ -129,18 +132,13 @@
         function objectMove() { //movement for the objects
             objectArray.forEach(function(object, index) {
                 object.objectXpos = object.objectXpos + object.objectXspeed;
-                //                if (object.objectXpos > canvas.width - object.objectSize) {
-                //                    object.objectXspeed = object.objectXspeed * -1; //right edge bounce
-                //                }
                 if (object.objectXpos + object.objectSize <= 0) {
-                    object.objectXpos = canvas.width;//returns object to original xpos soit is an a loop
+                    object.objectXpos = Math.floor(Math.random() * (canvas.width - objectSize - 0)) + canvas.width;//returns object to original xpos so it is an a loop
+                    console.log('random')
                     objectCount -= 1;
                 }
                 if (objectCount < objectMaxCount) {
                     objectArray.push(objectRandom()); //makes new object if less than max count
-                }
-                if (objectXpos > canvas.width - objectSize) {
-                    objectXpos = objectXpos; //return object to start pos
                 }
             });
         } //end of objectMove
@@ -148,6 +146,7 @@
         function objectRandom() { //randomly generates an object in set locations and timing
             var objectSize = Math.floor(Math.random() * (70 - 35)) + 35;//object size
             var objectYpos = horizonYpos - objectSize; //needs to be on the horizon y location
+            var objectXpos = Math.floor(Math.random() * (canvas.width - objectSize - 0)) + canvas.width;
             
             var newObjectItem = { //variables in array
                 objectSize: objectSize,
@@ -160,6 +159,13 @@
             objectCount += 1;
             return newObjectItem;//returns new object vars for new objects
         } //end of objectRandom
+        
+//        function objectCollision(){
+//            if(object.objectXpos <= (playerXpos + PLAYER_SIZE - 4) && (object.objectXpos + object.objectSize) > playerXpos){
+//                gameFinished = true;
+//            }
+//        }
+        
         
         function horizonDraw(x, y, w, h, c) {
             canvasContext.fillStyle = c;
@@ -202,7 +208,6 @@
             }
         } //end of gravity
         
-        var jumping = false
         function playerJump() { //to make player be able to avoid objects
             if (spacebarPressed && jumping == false || upArrowPressed && jumping == false) {
                 jumping = true
