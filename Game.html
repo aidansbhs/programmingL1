@@ -19,7 +19,6 @@
             width: 1200px;
             height: 400px;
         }
-
         h2 {
             margin-left: auto;
             margin-right: auto;
@@ -27,7 +26,6 @@
             font-size: 30px;
             font-family: ""
         }
-
     </style>
     <script>
         var canvas, canvasContext;
@@ -36,6 +34,7 @@
             canvasContext = canvas.getContext('2d');
             for (var i = objectCount; i < objectMaxCount; i++) {
                 objectArray.push(objectRandom());
+                console.log(objectCount)
             }
             setInterval(mainloop, 1000 / 60);
             document.addEventListener('keydown', keyPressed);
@@ -63,13 +62,14 @@
         var horizonWidth = 10;
         var horizonLength = 1200;
         var gameFinished = false;
-
         //object variables
+        var objectEasySpeed = 7;
+        var objectHardSpeed = 12;
         var objectCount = 0;
         var objectMaxCount = 2;
         var objectXpos = 1300; //canvas.width does not work
         var objectYpos = 0;
-        var objectXspeed = 5;
+        var objectXspeed = 7;
         var objectYspeed = 0;
         var objectSize = 0;
         var runRandom = true;
@@ -81,11 +81,26 @@
             alert("Your name must be more than one character");
             name = prompt("What's your name?");
         }
-        var difficulty = prompt("What difficulty do you want to play at?, Easy or Hard", 'easy')
-        while (difficulty.toLowerCase() !== 'easy' && difficulty.toLowerCase() !== 'hard') {
-            difficulty = prompt("What difficulty do you want to play at, Easy or Hard");
+        
+         difficulty = prompt("What difficulty do you want to play at?, Easy or Hard", 'easy');
+        var difficulty = '';
+        while (difficulty != 'easy' && difficulty != 'hard') {
         }
-
+        difficulty = prompt("What difficulty do you want to play at?, Easy or Hard", 'easy');
+        
+        if (difficulty === ""){
+            difficulty == 'easy';
+            
+        } else if (difficulty === null){
+            difficulty = 'easy';
+        
+        } else if (difficulty == difficulty){
+            difficulty = difficulty.toLowerCase();
+        }
+        console.log(difficulty)
+        
+        
+        
         function mainloop() { //The main loop function, it updates 60 times a second
             if (gameFinished == false) {
                 colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
@@ -115,6 +130,21 @@
             playerYpos = canvas.height - PLAYER_SIZE * 2;
         } //end of startPos
         
+        function difficultySpeed(){
+            if(difficulty.toLowerCase() == 'easy'){
+                if(score <= 500){
+                objectEasySpeed = 7;
+            } 
+            if(difficulty.toLowerCase() == 'easy' && score >= 1000){
+                objectEasySpeed = 12;
+            }
+            if(difficulty.toLowerCase() == 'easy' && score >= 2000){
+                
+            }
+        }
+        }
+        
+        
         function objectDraw() { //draws objects on screen
             objectArray.forEach(function(object, index, array) {
                 colorRect(object.objectXpos, object.objectYpos, object.objectSize, object.objectSize, 'blue'); //object individual base off index in array
@@ -127,34 +157,41 @@
                 if (object.objectXpos + object.objectSize <= 0) {
                     object.objectXpos = Math.floor(Math.random() * (canvas.width - objectSize - 0)) + canvas.width; //returns object to original xpos so it is an a loop
                     objectCount -= 1;
+//                    object.objectXspeed = Math.floor(Math.random()*(max - min)) + min;
                 }
-                if (difficulty.toLowerCase() == 'easy') {
-                    objectXspeed = 5;
-                }
-                if (difficulty.toLowerCase() == 'easy' && score >= 1000 && objectMaxCount <= 2) {
-                    objectXspeed = 10;
-                    objectMaxCount += 1;
-                    objectArray.push(objectRandom())
-                }
-                if (difficulty.toLowerCase() == 'easy' && score >= 2000 && objectMaxCount <= 3) {
-                    objectXspeed = 15;
-                }
-                if (difficulty.toLowerCase() == 'easy' && score >= 3000 && objectMaxCount <= 3) {
-                    objectXspeed = 20;
-                }
-                if (difficulty.toLowerCase() == 'hard') {
-                    objectXspeed = 10;
-                }
-                if (difficulty.toLowerCase() == 'hard' && score >= 1000 && objectMaxCount <= 2) {
-                    objectXspeed = 15;
-                    objectMaxCount += 1;
-                }
-                if (difficulty.toLowerCase() == 'hard' && score >= 2000 && objectMaxCount <= 3) {
-                    objectXspeed = 20;
-                }
-                if (objectCount < objectMaxCount) {
-                    objectArray.push(objectRandom()); //makes new object if less than max count
-                }
+//                if (difficulty.toLowerCase() == 'easy') {
+//                    objectXspeed = 5;
+//                }
+//                
+//                if (difficulty.toLowerCase() == 'easy' && score >= 1000 && object.speedChange == false) {
+//                    objectXspeed = 10;
+//                    if (objectMaxCount <= 2){
+//                    objectArray.push(objectRandom())
+//                    objectMaxCount += 1; 
+//                    console.log(object.speedChange)
+//                    }
+//                    object.speedChange = true;
+//                }
+//                
+//                if (difficulty.toLowerCase() == 'easy' && score >= 2000 &&        objectMaxCount <= 3) {
+//                    objectXspeed = 15;
+//                }
+//                if (difficulty.toLowerCase() == 'easy' && score >= 3000 && objectMaxCount <= 3) {
+//                    objectXspeed = 20;
+//                }
+//                if (difficulty.toLowerCase() == 'hard') {
+//                    objectXspeed = 10;
+//                }
+//                if (difficulty.toLowerCase() == 'hard' && score >= 1000 && objectMaxCount <= 2) {
+//                    objectXspeed = 15;
+//                    objectMaxCount += 1;
+//                }
+//                if (difficulty.toLowerCase() == 'hard' && score >= 2000 && objectMaxCount <= 3) {
+//                    objectXspeed = 20;
+//                }
+//                if (objectMaxCount < objectCount) {
+//                    objectArray.push(objectRandom()); //makes new object if less than max count
+//                }
             });
         } //end of objectMove
         
@@ -162,24 +199,32 @@
             var objectSize = Math.floor(Math.random() * (70 - 35)) + 35; //object size
             var objectYpos = horizonYpos - objectSize; //needs to be on the horizon y location
             var objectXpos = Math.floor(Math.random() * (canvas.width - objectSize)) + canvas.width;
+            if (objectCount <= 2){
+                
+            var speedChange = false;
+            }
+            
             var newObjectItem = { //variables in array
                 objectSize: objectSize,
                 //              objectXpos: objectXpos,
                 objectXpos: Math.floor(Math.random() * (canvas.width - objectSize)) + canvas.width,
                 objectYpos: objectYpos,
                 objectXspeed: objectXspeed * -1,
-                objectYspeed: objectYspeed
+                objectYspeed: objectYspeed,
+                speedChange: speedChange
+                
             }
             objectCount += 1;
             return newObjectItem; //returns new object vars for new objects
         } //end of objectRandom
-
+        
         function objectCollision() {
             objectArray.forEach(function(object,index){
                 
             if (object.objectXpos < playerXpos + PLAYER_SIZE && object.objectXpos + object.objectSize > playerXpos
                && object.objectYpos < playerYpos + PLAYER_SIZE && object.objectYpos + object.objectSize > playerYpos) {
                 gameFinished == true;
+                console.log('Collision')
             }
             });
         } //end of objectCollision
@@ -243,6 +288,5 @@
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
         } //end of colorRect
-
     </script>
 </body>
