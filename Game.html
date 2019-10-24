@@ -20,7 +20,6 @@
             width: 1200px;
             height: 400px;
         }
-
         /*text for instructions*/
         h2 {
             margin-left: auto;
@@ -29,7 +28,6 @@
             font-size: 30px;
             font-family: "";
         }
-
     </style>
     <script>
         var canvas, canvasContext;
@@ -43,7 +41,7 @@
             document.addEventListener('keydown', keyPressed);
             document.addEventListener('keyup', keyReleased);
         } //end of onload
-
+        
         //player variables
         var playerXpos = 0;
         var playerYpos = 0;
@@ -53,14 +51,14 @@
         var yGravity = 5;
         var jumping = false
         var startingPos = true;
-
+        
         //control variables 
         const UP_KEY = 38;
         const SPACEBAR_KEY = 32;
         const PAUSE_KEY = 80;
         var upArrowPressed = false;
         var spacebarPressed = false;
-
+        
         //game variables
         var score = 1;
         var horizonYpos = 350;
@@ -68,15 +66,12 @@
         var horizonWidth = 10;
         var horizonLength = 1200;
         var gameFinished = false;
-
         var pauseKeyPressed = false;
         var singlePress = true;
         var pauseChanger = 1;
         var gamePause = false;
-
+        
         //object variables
-        var objectEasySpeed = 7;
-        var objectHardSpeed = 12;
         var objectCount = 0;
         var objectMaxCount = 2;
         var objectXpos = 1300; //canvas.width does not work
@@ -86,7 +81,7 @@
         var objectSize = 0;
         var runRandom = true;
         var objectArray = [];
-
+        
         //prompts
         var name = prompt("What is your name?", 'Naruto') //name prompt for users name
         while (name.length < 2 || name == 'null') {
@@ -97,7 +92,6 @@
         while (difficulty !== 'easy' && difficulty !== 'hard') {
             difficulty = prompt("What difficulty do you want to play at?, Easy or Hard", 'easy');
         }
-
         function mainloop() { //The main loop function, it updates 60 times a second
             pauseGame()
             if (gamePause == false) {
@@ -111,9 +105,9 @@
                     objectMove();
                     drawScore();
                     objectCollision();
-
+                    difficultySpeed();
+                    
                     colorRect(horizonXpos, horizonYpos, horizonLength, horizonWidth, 'white'); //horizon line
-
                     if (runRandom) {
                         objectRandom();
                         runRandom = false;
@@ -125,50 +119,63 @@
                 }
             }
         } //end of mainloop
-
+        
         function startPos() { //player starting position in game
             playerXpos = canvas.width / 3 - PLAYER_SIZE / 2;
             playerYpos = canvas.height - PLAYER_SIZE * 2;
         } //end of startPos
-
+        
         function difficultySpeed() {
             if (difficulty.toLowerCase() == 'easy') {
                 if (score <= 500) {
-                    objectEasySpeed = 7;
+                    objectXspeed = -7;
+                }
+                if(score >= 1000){
+                    objectXspeed = -12;
+                }
+                if(score >= 2000){
+                    objectXspeed = -15;
+                }
+                if(score >= 3000){
+                    objectXspeed = -20;
                 }
             }
-            if (difficulty.toLowerCase() == 'easy' && score >= 1000) {
-                objectEasySpeed = 12;
-                console.log('Speed change')
-            }
-
-            if (difficulty.toLowerCase() == 'easy' && score >= 2000) {
-
-            }
-
-            if (difficulty.toLowerCase == 'hard') {
+            
+            if (difficulty.toLowerCase() == 'hard') {
                 if (score <= 500) {
-                    objectHardSpeed = 12;
+                    objectXspeed = -12;
+                }
+                if(score >= 1000){
+                    objectXspeed = -15;
+                }
+                if(score >= 2000){
+                    objectXspeed = -18;
+                }
+                if(score >= 3000){
+                    objectXspeed = -20;
                 }
             }
-        } //end of difficultySpeed 
-
+            
+            console.log(objectXspeed)
+        } //end of difficultySpeed
+        
         function objectDraw() { //draws objects on screen
             objectArray.forEach(function(object, index, array) {
                 colorRect(object.objectXpos, object.objectYpos, object.objectSize, object.objectSize, 'blue'); //object individual base off index in array
             });
         } //end of objectDraw
-
         function objectMove() { //movement for the objects
             objectArray.forEach(function(object, index) {
                 object.objectXpos = object.objectXpos + object.objectXspeed;
                 if (object.objectXpos + object.objectSize <= 0) {
-                    object.objectXpos = Math.floor(Math.random() * (canvas.width - objectSize - 0)) + canvas.width; //returns object to original xpos so it is an a loop
+                    object.objectXpos = Math.floor(Math.random() * (canvas.width - objectSize - 0)) + canvas.width; //returns  object to original xpos so it is an a loop
                     objectCount -= 1;
                 }
+                object.objectXspeed = objectXspeed; //for difficulty speed
             });
+            
         } //end of objectMove
-
+        
         function objectRandom() { //randomly generates an object in set locations and timing
             var objectSize = Math.floor(Math.random() * (70 - 35)) + 35; //object size
             var objectYpos = horizonYpos - objectSize; //needs to be on the horizon y location
@@ -179,12 +186,11 @@
                 objectYpos: objectYpos,
                 objectXspeed: objectXspeed * -1, //speed needs to be in correlation to score
                 objectYspeed: objectYspeed,
-
             }
             objectCount += 1;
             return newObjectItem; //returns new object vars for new objects
         } //end of objectRandom
-
+        
         function objectCollision() {
             objectArray.forEach(function(object, index) {
                 if (object.objectXpos < playerXpos + PLAYER_SIZE && object.objectXpos + object.objectSize > playerXpos &&
@@ -194,11 +200,12 @@
                 }
             });
         } //end of objectCollision
+        
         function gameOver() {
             if (gameFinished == true) {
-
             }
         } //end of gameOver
+        
         function pauseGame() { //Allows to pause 
             if (pauseKeyPressed == true && singlePress == true) {
                 singlePress = false;
@@ -214,13 +221,12 @@
                 pauseChanger = 1;
             }
         } //end of pauseGame
-
-
+        
         function horizonDraw(x, y, w, h, c) {
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
         } //end of horizonDraw
-
+        
         function drawScore() {
             canvasContext.font = "26px Arial";
             canvasContext.fillStyle = "white";
@@ -229,7 +235,7 @@
                 score += 1;
             }
         } //end of drawScore
-
+        
         //key functions 
         function keyPressed(evt) { //buttons that when pressed will activate player move
             if (evt.keyCode == 38) {
@@ -242,7 +248,7 @@
                 pauseKeyPressed = true;
             }
         } //end of keyPressed
-
+        
         function keyReleased(evt) { //checks for when keys are released 
             if (evt.keyCode == 38) {
                 upArrowPressed = false;
@@ -255,7 +261,7 @@
                 singlePress = true;
             }
         } //end of keyReleased
-
+        
         //game functions
         function gravity() { // to bring player back to ground
             if (yGravity > -60 && playerYpos < horizonYpos - PLAYER_SIZE) {
@@ -263,7 +269,7 @@
                 yGravity += 2;
             }
         } //end of gravity
-
+        
         function playerJump() { //to make player be able to avoid objects
             if (spacebarPressed && jumping == false || upArrowPressed && jumping == false) {
                 jumping = true
@@ -275,11 +281,10 @@
                 jumping = false;
             }
         } //end of playerJump 
-
+        
         function colorRect(x, y, w, h, c) { //drawing canvas and player
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
         } //end of colorRect
-
     </script>
 </body>
