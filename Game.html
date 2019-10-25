@@ -20,6 +20,7 @@
             width: 1200px;
             height: 400px;
         }
+
         /*text for instructions*/
         h2 {
             margin-left: auto;
@@ -28,20 +29,18 @@
             font-size: 30px;
             font-family: "";
         }
+
     </style>
     <script>
         var canvas, canvasContext;
         window.onload = function() {
             canvas = document.getElementById('gameCanvas');
             canvasContext = canvas.getContext('2d');
-            for (var i = objectCount; i < objectMaxCount; i++) {
-                objectArray.push(objectRandom());
-            }
             setInterval(mainloop, 1000 / 60);
             document.addEventListener('keydown', keyPressed);
             document.addEventListener('keyup', keyReleased);
         } //end of onload
-        
+
         //player variables
         var playerXpos = 0;
         var playerYpos = 0;
@@ -51,37 +50,39 @@
         var yGravity = 5;
         var jumping = false
         var startingPos = true;
-        
+
         //control variables 
         const UP_KEY = 38;
         const SPACEBAR_KEY = 32;
         const PAUSE_KEY = 80;
         var upArrowPressed = false;
         var spacebarPressed = false;
-        
+
         //game variables
         var score = 1;
-        var horizonYpos = 350;
+        var horizonYpos = 0;
         var horizonXpos = 0;
         var horizonWidth = 10;
-        var horizonLength = 1200;
+        var horizonLength = 0;
         var gameFinished = false;
         var pauseKeyPressed = false;
         var singlePress = true;
         var pauseChanger = 1;
         var gamePause = false;
-        
+        var oneTimer = true;
+        var gamePauseBackground = 0;
+
         //object variables
         var objectCount = 0;
         var objectMaxCount = 2;
-        var objectXpos = 1300; //canvas.width does not work
+        var objectXpos = 0;
         var objectYpos = 0;
         var objectXspeed = 7;
         var objectYspeed = 0;
         var objectSize = 0;
         var runRandom = true;
         var objectArray = [];
-        
+
         //prompts
         var name = prompt("What is your name?", 'Naruto') //name prompt for users name
         while (name.length < 2 || name == 'null') {
@@ -92,10 +93,18 @@
         while (difficulty !== 'easy' && difficulty !== 'hard') {
             difficulty = prompt("What difficulty do you want to play at?, Easy or Hard", 'easy');
         }
+
         function mainloop() { //The main loop function, it updates 60 times a second
             pauseGame()
             if (gamePause == false) {
                 if (gameFinished == false) {
+                    if (oneTimer == true) {
+                        gameSetup();
+                        oneTimer = false;
+                        for (var i = objectCount; i < objectMaxCount; i++) {
+                            objectArray.push(objectRandom());
+                        }
+                    }
                     colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
                     colorRect(playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE, 'red'); //draws player
                     gravity();
@@ -106,7 +115,8 @@
                     drawScore();
                     objectCollision();
                     difficultySpeed();
-                    
+
+                    gamePauseBackground = 0;
                     colorRect(horizonXpos, horizonYpos, horizonLength, horizonWidth, 'white'); //horizon line
                     if (runRandom) {
                         objectRandom();
@@ -117,48 +127,63 @@
                         startingPos = false;
                     }
                 }
+            } else {
+                if(gamePauseBackground == 0 && gameFinished == false){
+                drawText("Game is Paused", canvas.width / 2.3, canvas.height / 2, 'white')
+                    gamePauseBackground = 1;
+                }
             }
         } //end of mainloop
-        
+
         function startPos() { //player starting position in game
             playerXpos = canvas.width / 3 - PLAYER_SIZE / 2;
             playerYpos = canvas.height - PLAYER_SIZE * 2;
         } //end of startPos
-        
+
+        function gameSetup() {
+            horizonLength = canvas.width;
+            horizonYpos = canvas.height - 50;
+            objectXpos = canvas.width;
+            objectYpos = horizonYpos;
+
+        } //end of gameSetup
+
         function difficultySpeed() {
             if (difficulty.toLowerCase() == 'easy') {
                 if (score <= 500) {
                     objectXspeed = -7;
                 }
-                if(score >= 1000){
+                if (score >= 1000) {
                     objectXspeed = -12;
+                    objectMaxCount = 3;
+                    console.log(objectMaxCount)
                 }
-                if(score >= 2000){
+                if (score >= 2000) {
                     objectXspeed = -15;
                 }
-                if(score >= 3000){
+                if (score >= 3000) {
                     objectXspeed = -20;
                 }
             }
-            
+
             if (difficulty.toLowerCase() == 'hard') {
                 if (score <= 500) {
                     objectXspeed = -12;
                 }
-                if(score >= 1000){
+                if (score >= 1000) {
                     objectXspeed = -15;
                 }
-                if(score >= 2000){
+                if (score >= 2000) {
                     objectXspeed = -18;
                 }
-                if(score >= 3000){
+                if (score >= 3000) {
                     objectXspeed = -20;
                 }
             }
-            
+
             console.log(objectXspeed)
         } //end of difficultySpeed
-        
+
         function objectDraw() { //draws objects on screen
             objectArray.forEach(function(object, index, array) {
                 colorRect(object.objectXpos, object.objectYpos, object.objectSize, object.objectSize, 'blue'); //object individual base off index in array
@@ -173,9 +198,9 @@
                 }
                 object.objectXspeed = objectXspeed; //for difficulty speed
             });
-            
+
         } //end of objectMove
-        
+
         function objectRandom() { //randomly generates an object in set locations and timing
             var objectSize = Math.floor(Math.random() * (70 - 35)) + 35; //object size
             var objectYpos = horizonYpos - objectSize; //needs to be on the horizon y location
@@ -190,7 +215,7 @@
             objectCount += 1;
             return newObjectItem; //returns new object vars for new objects
         } //end of objectRandom
-        
+
         function objectCollision() {
             objectArray.forEach(function(object, index) {
                 if (object.objectXpos < playerXpos + PLAYER_SIZE && object.objectXpos + object.objectSize > playerXpos &&
@@ -200,12 +225,11 @@
                 }
             });
         } //end of objectCollision
-        
+
         function gameOver() {
-            if (gameFinished == true) {
-            }
+            if (gameFinished == true) {}
         } //end of gameOver
-        
+
         function pauseGame() { //Allows to pause 
             if (pauseKeyPressed == true && singlePress == true) {
                 singlePress = false;
@@ -221,21 +245,27 @@
                 pauseChanger = 1;
             }
         } //end of pauseGame
-        
+
         function horizonDraw(x, y, w, h, c) {
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
         } //end of horizonDraw
-        
+
+        function drawText(msg, x, y, f, c) {
+            canvasContext.font = f;
+            canvasContext.fillStyle = c;
+            canvasContext.fillText(msg, x, y)
+        } //end of drawText
+
         function drawScore() {
             canvasContext.font = "26px Arial";
             canvasContext.fillStyle = "white";
-            canvasContext.fillText("Score: " + score, canvas.width / 2.5, 30);
+            canvasContext.fillText("Score: " + score, canvas.width / 2.25, 30);
             if (gameFinished == false) {
                 score += 1;
             }
         } //end of drawScore
-        
+
         //key functions 
         function keyPressed(evt) { //buttons that when pressed will activate player move
             if (evt.keyCode == 38) {
@@ -248,7 +278,7 @@
                 pauseKeyPressed = true;
             }
         } //end of keyPressed
-        
+
         function keyReleased(evt) { //checks for when keys are released 
             if (evt.keyCode == 38) {
                 upArrowPressed = false;
@@ -261,7 +291,7 @@
                 singlePress = true;
             }
         } //end of keyReleased
-        
+
         //game functions
         function gravity() { // to bring player back to ground
             if (yGravity > -60 && playerYpos < horizonYpos - PLAYER_SIZE) {
@@ -269,7 +299,7 @@
                 yGravity += 2;
             }
         } //end of gravity
-        
+
         function playerJump() { //to make player be able to avoid objects
             if (spacebarPressed && jumping == false || upArrowPressed && jumping == false) {
                 jumping = true
@@ -281,10 +311,11 @@
                 jumping = false;
             }
         } //end of playerJump 
-        
+
         function colorRect(x, y, w, h, c) { //drawing canvas and player
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
         } //end of colorRect
+
     </script>
 </body>
