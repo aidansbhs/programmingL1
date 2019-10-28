@@ -28,7 +28,7 @@
             margin-right: auto;
             text-align: center;
             font-size: 30px;
-            font-family: "";
+            font-family: "Arial";
             color: white;
         }
 
@@ -39,8 +39,8 @@
         }
 */
 
-        html {
-            background-color: black;
+        html { 
+            background-color: black; 
         }
 
     </style>
@@ -58,7 +58,7 @@
         //player variables
         var playerXpos = 0;
         var playerYpos = 0;
-        const PLAYER_SIZE = 50;
+        const PLAYER_SIZE = 60;
         var playerYSpeed = 7;
         var playerXSpeed = 0;
         var yGravity = 5;
@@ -162,16 +162,16 @@
         function loadImgAssets() { //This function loads all images for the game
             imgs = [];
             imgs.dino = new Image();
-            imgs.dino.src = 'img/dino5.png';
+            imgs.dino.src = 'img/dino8.png';
             imgs.objects = new Image();
             imgs.objects.src = 'img/so.png';
 
             return imgs; // Returns all images to the array
         } //end of loadImgAssets
 
-        //        function drawDino(src, x, y, w, h) { //Draws the dino onto the canvas
-        //            canvasContext.drawImage(src, x, y, w, h);
-        //        } //end of drawDino
+//        function drawDino(src, x, y, w, h) { //Draws the dino onto the canvas
+//            canvasContext.drawImage(src, x, y, w, h);
+//        } //end of drawDino
 
         function startPos() { //player starting position in game
             playerXpos = canvas.width / 3 - PLAYER_SIZE / 2;
