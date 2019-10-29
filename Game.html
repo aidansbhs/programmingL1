@@ -6,7 +6,6 @@
 
 <body>
     <canvas id="gameCanvas" width="1200" height="400"></canvas>
-    <!--    <button onclick="playAgain()">Play Again</button>-->
     <h2>Press spacebar or up arrow to jump</h2>
     <h2>See how long you can last for!</h2>
     <h2>Press P to pause</h2>
@@ -21,7 +20,6 @@
             width: 1200px;
             height: 400px;
         }
-
         /*text for instructions below canvas*/
         h2 {
             margin-left: auto;
@@ -31,17 +29,9 @@
             font-family: "Arial";
             color: white;
         }
-
-        /*
-        button {
-            display: block;
-            margin: auto;
-        }
-*/
         html {
             background-color: black;
         }
-
     </style>
     <script>
         var canvas, canvasContext, imageAssets; // Defines the major variables for the canvas to work properly
@@ -53,7 +43,7 @@
             document.addEventListener('keydown', keyPressed);
             document.addEventListener('keyup', keyReleased);
         } //end of onload
-
+        
         //player variables
         var playerXpos = 0;
         var playerYpos = 0;
@@ -63,7 +53,7 @@
         var yGravity = 5;
         var jumping = false;
         var startingPos = true;
-
+        
         //control variables 
         const UP_KEY = 38;
         const SPACEBAR_KEY = 32;
@@ -72,7 +62,7 @@
         var spacebarPressed = false;
         const RESTART_KEY = 82;
         var restartPressed = false;
-
+        
         //game variables
         var score = 1;
         var horizonYpos = 0;
@@ -87,7 +77,7 @@
         var oneTimer = true;
         var gamePauseBackground = 0;
         var gameOverBackground = 0;
-
+        
         //object variables
         var objectCount = 0;
         var objectMaxCount = 2;
@@ -98,7 +88,7 @@
         var objectSize = 0;
         var runRandom = true;
         var objects = [];
-
+        
         //prompts
         var name = prompt("What is your name?", 'Naruto') //name prompt for users name
         while (name.length < 2 || name == 'null') {
@@ -109,10 +99,10 @@
         while (difficulty !== 'easy' && difficulty !== 'hard') { // if the users response is not easy or hard, it will prompt them again 
             difficulty = prompt("What difficulty do you want to play at?, Easy or Hard", 'easy');
         }
-
+        
         function mainloop() { //The main loop function, it updates 60 times a second
             pauseGame();
-            if(gameFinished == true && restartPressed == true){
+            if(gameFinished == true && restartPressed == true){ //restart statement, basically resets all main functions
                 objectMove();
                 objectDraw();
                 objectRandom();
@@ -165,7 +155,7 @@
                 }
             }
         } //end of mainloop
-
+        
         function loadImgAssets() { //This function loads all images for the game
             imgs = [];
             imgs.dino = new Image();
@@ -174,61 +164,73 @@
             imgs.objects.src = '';
             return imgs; // Returns all images to the array
         } //end of loadImgAssets
-
+        
         //        function drawDino(src, x, y, w, h) { //Draws the dino onto the canvas
         //            canvasContext.drawImage(src, x, y, w, h);
         //        } //end of drawDino
-
+        
         function startPos() { //player starting position in game
             playerXpos = canvas.width / 3 - PLAYER_SIZE / 2;
             playerYpos = canvas.height - PLAYER_SIZE * 2;
         } //end of startPos
         
-
         function gameSetup() { //defines the variables to setup game
             horizonLength = canvas.width;
             horizonYpos = canvas.height - 50;
             objectXpos = canvas.width;
             objectYpos = horizonYpos;
         } //end of gameSetup
-
+        
         function difficultySpeed() {
             if (difficulty.toLowerCase() == 'easy') { //sets objects speed for easy
                 if (score <= 500) {
                     objectXspeed = -7;
                 }
-                if (score >= 1000) { //objects will get faster based on score, in this case if score is greater than or equal to 1000, increase object speed by  5
-                    objectXspeed = -12;
+                if(score >= 500 && objectXspeed <= -10){
+                    objectXspeed += -0.005;
                 }
-                if (score >= 2000) {
-                    objectXspeed = -15;
+                if (score >= 1000 && objectXspeed <= -15) { //objects will get faster based on score, in this case if score is greater than or equal to 1000, increase object speed by  5
+                    objectXspeed += -0.0010;
                 }
-                if (score >= 3000) {
-                    objectXspeed = -20;
+                if (score >= 2000 && objectXspeed <= -20) {
+                    objectXspeed += -0.005;
+                }
+                if (score >= 3000 && objectXspeed <= -25) {
+                    objectXspeed += -0.005;
                 }
             }
             if (difficulty.toLowerCase() == 'hard') { //sets objects speed for hard
                 if (score <= 500) {
-                    objectXspeed = -12;
+                    objectXspeed = -10;
                 }
-                if (score >= 1000) {
-                    objectXspeed = -15; //same proccess as easy difficulty 
+                if(score >= 500 && objectXspeed <= -12.5){
+                    objectXspeed += -0.005;
                 }
-                if (score >= 2000) {
-                    objectXspeed = -18;
+                if (score >= 1000 && objectXspeed <= -15) {
+                    objectXspeed += -0.005; //same proccess as easy difficulty 
                 }
-                if (score >= 3000) {
-                    objectXspeed = -20;
+                if(score >= 1500 && objectXspeed <= -17.5){
+                    objectXspeed += -0.005;
+                }
+                if (score >= 2000 && objectXspeed <= -20) {
+                    objectXspeed += -0.005;
+                }
+                if(score >= 2500 && objectXspeed <= -22.5){
+                    objectXspeed += -0.005;
+                }
+                if (score >= 3000 && objectXspeed <= -25) {
+                    objectXspeed += -0.005;
                 }
             }
+            console.log(objectXspeed)
         } //end of difficultySpeed
-
+        
         function objectDraw() { //draws objects on screen
             objects.forEach(function(object, index, array) {
                 colorRect(object.objectXpos, object.objectYpos, object.objectSize, object.objectSize, 'blue'); //object individual base off index in array
             });
         } //end of objectDraw
-
+        
         function objectMove() { //movement for the objects
             objects.forEach(function(object, i) {
                 if(gameFinished == true && restartPressed == true){
@@ -243,7 +245,7 @@
                 object.objectXspeed = objectXspeed;
             });
         } //end of objectMove
-
+        
         function objectRandom() { //randomly generates objects in game
             var objectSize = Math.floor(Math.random() * (70 - 40)) + 40; //gives a random object size
             var objectYpos = horizonYpos - objectSize; //needs to be on the horizon y location
@@ -258,7 +260,7 @@
             objectCount += 1;
             return newObjectItems; //returns objects into array
         } //end of objectRandom
-
+        
         function objectCollision() { //detects when player has touched object
             objects.forEach(function(object, index) {
                 
@@ -268,7 +270,7 @@
                 }
             });
         } //end of objectCollision
-
+        
         function pauseGame() { //Allows the player to pause the game by toggling p key 
             if (pauseKeyPressed == true && singlePress == true) {
                 singlePress = false;
@@ -284,18 +286,18 @@
                 pauseChanger = 1;
             }
         } //end of pauseGame
-
+        
         function horizonDraw(x, y, w, h, c) { //draws ground line 
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
         } //end of horizonDraw
-
+        
         function drawText(msg, x, y, f, c) { //draws text for pause screen
             canvasContext.font = f;
             canvasContext.fillStyle = c;
             canvasContext.fillText(msg, x, y)
         } //end of drawText
-
+        
         function drawScore() { //draws text for the score
             canvasContext.font = "26px Arial";
             canvasContext.fillStyle = "white";
@@ -304,7 +306,7 @@
                 score += 1;
             }
         } //end of drawScore
-
+        
         //key functions 
         function keyPressed(evt) { //When the player has pressed a key, this function will change the *keyPressed to true
             if (evt.keyCode == 38) {
@@ -320,7 +322,7 @@
                 restartPressed = true;
             }
         } //end of keyPressed
-
+        
         function keyReleased(evt) { // Same thing as above, but this time when the key is released it will change it to false
             if (evt.keyCode == 38) { //Up Arrow
                 upArrowPressed = false;
@@ -336,14 +338,14 @@
                 restartPressed = false;
             }
         } //end of keyReleased
-
+        
         function gravity() { // to bring player back to ground
             if (yGravity > -60 && playerYpos < horizonYpos - PLAYER_SIZE) {
                 playerYpos += yGravity / 5;
                 yGravity += 2;
             }
         } //end of gravity
-
+        
         function playerJump() { //to make player be able to avoid objects
             if (spacebarPressed && jumping == false || upArrowPressed && jumping == false) {
                 jumping = true;
@@ -355,11 +357,10 @@
                 jumping = false;
             }
         } //end of playerJump 
-
+        
         function colorRect(x, y, w, h, c) { //drawing canvas and player
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
         } //end of colorRect
-
     </script>
 </body>
