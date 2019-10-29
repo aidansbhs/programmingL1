@@ -38,9 +38,8 @@
             margin: auto;
         }
 */
-
-        html { 
-            background-color: black; 
+        html {
+            background-color: black;
         }
 
     </style>
@@ -71,8 +70,8 @@
         const PAUSE_KEY = 80;
         var upArrowPressed = false;
         var spacebarPressed = false;
-        //        const RESTART_KEY = 82;
-        //        var restartPressed = false;
+        const RESTART_KEY = 82;
+        var restartPressed = false;
 
         //game variables
         var score = 1;
@@ -113,12 +112,22 @@
 
         function mainloop() { //The main loop function, it updates 60 times a second
             pauseGame();
+            if(gameFinished == true && restartPressed == true){
+                objectMove();
+                objectDraw();
+                objectRandom();
+                score = 0;
+                oneTimer = true;
+                gameFinished = false;
+                objectCount = 0;
+                objectMaxCount = 2;
+}             
             if (gamePause == false) {
                 if (gameFinished == false) { // Only runs of gameFinished is set to false, so when they player loses and gameFinished is set to true, it will stop the game
                     if (oneTimer == true) {
                         gameSetup();
                         oneTimer = false;
-                        for (var i = objectCount; i < objectMaxCount; i++) {
+                        for ( i = objectCount; i < objectMaxCount; i++) {
                             objects.push(objectRandom());
                         }
                     }
@@ -134,7 +143,6 @@
                     difficultySpeed();
                     gamePauseBackground = 0;
                     gameOverBackground = 0;
-
                     colorRect(horizonXpos, horizonYpos, horizonLength, horizonWidth, 'white'); //horizon line
                     if (runRandom) {
                         objectRandom();
@@ -147,7 +155,7 @@
                 }
                 if (gameOverBackground == 0 && gameFinished == true) { //Game Over screen
                     drawText('Game Over ' + name, canvas.width / 2.45, canvas.height / 2.5, 'white'); //Game Over text for when game has finished
-                    drawText('Press Ctrl + R to restart', canvas.width / 2.55, canvas.height / 2, 'white'); //Restart text
+                    drawText('Press R to restart', canvas.width / 2.40, canvas.height / 2, 'white'); //Restart text
                     gameOverBackground = 1;
                 }
             } else {
@@ -155,42 +163,27 @@
                     drawText("Game is Paused", canvas.width / 2.5, canvas.height / 2, '25px retro gaming', 'white') //pause game text
                     gamePauseBackground = 1;
                 }
-                //                playAgain();
             }
-        } //end of mainloops
+        } //end of mainloop
 
         function loadImgAssets() { //This function loads all images for the game
             imgs = [];
             imgs.dino = new Image();
-            imgs.dino.src = 'img/dino8.png';
+            imgs.dino.src = '';
             imgs.objects = new Image();
-            imgs.objects.src = 'img/so.png';
-
+            imgs.objects.src = '';
             return imgs; // Returns all images to the array
         } //end of loadImgAssets
 
-//        function drawDino(src, x, y, w, h) { //Draws the dino onto the canvas
-//            canvasContext.drawImage(src, x, y, w, h);
-//        } //end of drawDino
+        //        function drawDino(src, x, y, w, h) { //Draws the dino onto the canvas
+        //            canvasContext.drawImage(src, x, y, w, h);
+        //        } //end of drawDino
 
         function startPos() { //player starting position in game
             playerXpos = canvas.width / 3 - PLAYER_SIZE / 2;
             playerYpos = canvas.height - PLAYER_SIZE * 2;
         } //end of startPos
-
-        //        function playAgain() {
-        //            if (gameFinished == true && restartPressed == true) {
-        //                startPos();
-        //                score = 0;
-        //                objectSize = Math.floor(Math.random() * (70 - 40)) + 40;
-        //                objectYpos = horizonYpos - objectSize;
-        //                objectXpos = Math.floor(Math.random() * (canvas.width - objectSize)) + canvas.width;
-        //                for (var i = objectCount; i < objectMaxCount; i++) {
-        //                    objects.push(objectRandom());
-        //                }
-        //                objectCount += 1;
-        //            }
-        //        } //end of playAgain
+        
 
         function gameSetup() { //defines the variables to setup game
             horizonLength = canvas.width;
@@ -237,7 +230,11 @@
         } //end of objectDraw
 
         function objectMove() { //movement for the objects
-            objects.forEach(function(object, index) {
+            objects.forEach(function(object, i) {
+                if(gameFinished == true && restartPressed == true){
+                 delete objects[i];  
+                    
+                }
                 object.objectXpos = object.objectXpos + object.objectXspeed;
                 if (object.objectXpos + object.objectSize <= 0) { //if the object is less than the canvas 
                     object.objectXpos = Math.floor(Math.random() * (canvas.width - objectSize - 0)) + canvas.width; //return object to original xpos so it is in a loop
@@ -264,6 +261,7 @@
 
         function objectCollision() { //detects when player has touched object
             objects.forEach(function(object, index) {
+                
                 if (object.objectXpos < playerXpos + PLAYER_SIZE && object.objectXpos + object.objectSize > playerXpos &&
                     object.objectYpos < playerYpos + PLAYER_SIZE && object.objectYpos + object.objectSize > playerYpos) {
                     gameFinished = true; //ends the game
@@ -318,9 +316,9 @@
             if (evt.keyCode == PAUSE_KEY) {
                 pauseKeyPressed = true;
             }
-            //            if (evt.keyCode == RESTART_KEY) {
-            //                restartPressed = true;
-            //            }
+            if (evt.keyCode == RESTART_KEY) {
+                restartPressed = true;
+            }
         } //end of keyPressed
 
         function keyReleased(evt) { // Same thing as above, but this time when the key is released it will change it to false
@@ -334,9 +332,9 @@
                 pauseKeyPressed = false;
                 singlePress = true;
             }
-            //            if (evt.keyCode == RESTART_KEY) {
-            //                restartPressed = false;
-            //            }
+            if (evt.keyCode == RESTART_KEY) {
+                restartPressed = false;
+            }
         } //end of keyReleased
 
         function gravity() { // to bring player back to ground
