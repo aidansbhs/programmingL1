@@ -197,7 +197,7 @@
                 if (score >= 500 && objectXspeed >= -10) {
                     objectXspeed += -0.005;
                 }
-                if (score >= 1000 && objectXspeed >= -15) { //objects will get faster based on score, in this case if score is greater than or equal to 1000, increase object speed slowly until they reach the max speed for that score threshold 
+                if (score >= 1000 && objectXspeed >= -15) { //objects will get faster based on score, in this case if score is greater than or equal to 1000, increase object speed slowly until they reach the max speed for that score threshold of score
                     objectXspeed += -0.006;
                 }
                 if (score >= 1500 && objectXspeed >= -17.5) {
@@ -246,7 +246,7 @@
 
         function objectDraw() { //draws objects on screen
             objects.forEach(function(object, index, array) {
-                colorRect(object.objectXpos, object.objectYpos, object.objectSize, object.objectSize, 'blue'); //object individual base off index in array
+                drawCacti(imageAssets.object, object.objectXpos, object.objectYpos, object.objectSize, object.objectSize, 'blue'); //object individual base off index in array
             });
         } //end of objectDraw
 
@@ -375,6 +375,10 @@
                 playerYSpeed = 0;
                 jumping = false;
             }
+            if(playerYpos > horizonYpos){
+                playerYpos = horizonYpos;
+            }
+            
         } //end of playerJump 
 
         function colorRect(x, y, w, h, c) { //drawing canvas and player
