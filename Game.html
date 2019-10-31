@@ -106,7 +106,7 @@
 
         function mainloop() { //The main loop function, it updates 60 times a second
             pauseGame();
-            if (gameFinished == true && restartPressed == true) { //restart statement, basically resets all main functions
+            if (gameFinished == true && restartPressed == true) { //restart statement, basically resets all main functions when player press p key and game finished is true
                 objectMove();
                 objectDraw();
                 objectRandom();
@@ -127,17 +127,17 @@
                     }
                     colorRect(0, 0, canvas.width, canvas.height, 'black'); // draws background
                     colorRect(horizonXpos, horizonYpos, horizonLength, horizonWidth, 'white'); //horizon line
-                    drawDino(imageAssets.dino, playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE, 'red');
-                    gravity();
-                    playerJump();
-                    objectRandom();
-                    objectDraw();
-                    objectMove();
-                    drawScore();
-                    objectCollision();
-                    difficultySpeed();
-                    gamePauseBackground = 0;
-                    gameOverBackground = 0;
+                    drawDino(imageAssets.dino, playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE, 'red'); //draws player 'dino'
+                    gravity(); //when player has jumped the gravity function will bring the playerYpos back to the ground
+                    playerJump(); //Enables the player to avoid the objects by jumping using the spacebar or arrow key
+                    objectRandom(); //creates an array for that defines all the objects information, including Xpos, Ypos, Size, Yspeed and Xspeed
+                    objectDraw(); //draws the objects on canvas
+                    objectMove(); //movement for the objects along the horzion line
+                    drawScore(); //draws the score text on canvas and sets how fast the player gains score
+                    objectCollision(); // detects when player has been touched by objects and stops the game
+                    difficultySpeed(); //sets the difficulty speed of the game for both easy and hard difficulty 
+                    gamePauseBackground = 0; //sets the gamePauseBackground screen to 0 if the game is not finished
+                    gameOverBackground = 0; //sets the gameOverBackground to 0 if the game is not finished 
                     if (runRandom) {
                         objectRandom();
                         runRandom = false;
@@ -189,15 +189,15 @@
             objectYpos = horizonYpos;
         } //end of gameSetup
 
-        function difficultySpeed() {
-            if (difficulty.toLowerCase() == 'easy') { //sets objects speed for easy when player types easy difficulty
-                if (score <= 500) {
+        function difficultySpeed() { //sets objects speed for easy when player types easy difficulty
+            if (difficulty.toLowerCase() == 'easy') {
+                if (score <= 500) { //easy start speed is -7 until score is greater than 500
                     objectXspeed = -7;
                 }
-                if (score >= 500 && objectXspeed >= -10) {
+                if (score >= 500 && objectXspeed >= -10) { //then objects will get faster based on score, in this case if score is greater than or equal to 500, increase object speed slowly until they reach the max speed for that score threshold
                     objectXspeed += -0.005;
                 }
-                if (score >= 1000 && objectXspeed >= -15) { //objects will get faster based on score, in this case if score is greater than or equal to 1000, increase object speed slowly until they reach the max speed for that score threshold of score
+                if (score >= 1000 && objectXspeed >= -15) {
                     objectXspeed += -0.006;
                 }
                 if (score >= 1500 && objectXspeed >= -17.5) {
@@ -206,13 +206,13 @@
                 if (score >= 2000 && objectXspeed >= -20) {
                     objectXspeed += -0.008;
                 }
-                if (score >= 2500 && objectXspeed >= -22.5){
+                if (score >= 2500 && objectXspeed >= -22.5) {
                     objectXspeed += -0.009
                 }
                 if (score >= 3000 && objectXspeed >= -25) {
                     objectXspeed += -0.01;
                 }
-                if (score >= 3500){
+                if (score >= 3500) {
                     objectXspeed += -0.05;
                 }
             }
@@ -224,7 +224,7 @@
                     objectXspeed += -0.005;
                 }
                 if (score >= 1000 && objectXspeed >= -15) {
-                    objectXspeed += -0.006; //same proccess as easy difficulty 
+                    objectXspeed += -0.006; //same proccess as easy difficulty speed
                 }
                 if (score >= 1500 && objectXspeed >= -17.5) {
                     objectXspeed += -0.007;
@@ -238,7 +238,7 @@
                 if (score >= 3000 && objectXspeed >= -25) {
                     objectXspeed += -0.01;
                 }
-                if(score >= 3500){
+                if (score >= 3500) {
                     objectXspeed += -0.05;
                 }
             }
@@ -253,11 +253,10 @@
         function objectMove() { //movement for the objects
             objects.forEach(function(object, i) {
                 if (gameFinished == true && restartPressed == true) {
-                    delete objects[i]; //deletes objects on screen when player has died, so it resets them for when they restart 
-
+                    delete objects[i]; //deletes objects on screen when player has died, so it resets them for when they restart again
                 }
                 object.objectXpos = object.objectXpos + object.objectXspeed;
-                if (object.objectXpos + object.objectSize <= 0) { //if the object is less than the canvas 
+                if (object.objectXpos + object.objectSize <= 0) { //if the objectXpos is less than the canvas width
                     object.objectXpos = Math.floor(Math.random() * (canvas.width - objectSize - 0)) + canvas.width; //return object to original xpos so it is in a loop
                     objectCount -= 1;
                 }
@@ -267,9 +266,9 @@
 
         function objectRandom() { //randomly generates objects in game
             var objectSize = Math.floor(Math.random() * (70 - 40)) + 40; //gives a random object size
-            var objectYpos = horizonYpos - objectSize; //needs to be on the horizon y location
+            var objectYpos = horizonYpos - objectSize; //objectYpos has to be on the horizon y location
             var objectXpos = Math.floor(Math.random() * (canvas.width - objectSize)) + canvas.width; //objects x location 
-            var newObjectItems = {
+            var newObjectItems = { //array 
                 objectSize: objectSize,
                 objectXpos: Math.floor(Math.random() * (canvas.width - objectSize)) + canvas.width,
                 objectYpos: objectYpos,
@@ -282,7 +281,6 @@
 
         function objectCollision() { //detects when player has touched object
             objects.forEach(function(object, index) {
-
                 if (object.objectXpos < playerXpos + PLAYER_SIZE && object.objectXpos + object.objectSize > playerXpos &&
                     object.objectYpos < playerYpos + PLAYER_SIZE && object.objectYpos + object.objectSize > playerYpos) {
                     gameFinished = true; //ends the game
@@ -359,9 +357,9 @@
         } //end of keyReleased
 
         function gravity() { // to bring player back to ground
-            if (yGravity > -60 && playerYpos < horizonYpos - PLAYER_SIZE) {
+            if (yGravity > -60 && playerYpos < horizonYpos - PLAYER_SIZE) { //if the yGravity is less than -60 and playerYpos is less than horizon ypos - the playerSize, then increase playerYpos by yGravity divided by 5
                 playerYpos += yGravity / 5;
-                yGravity += 2;
+                yGravity += 2; //then constantley add 2 to yGravity 
             }
         } //end of gravity
 
@@ -373,12 +371,9 @@
             }
             if (playerYpos + PLAYER_SIZE >= horizonYpos) { //cannot jump more if player xpos is greater than the horizon line
                 playerYSpeed = 0;
+                playerYpos = horizonYpos - PLAYER_SIZE;//to stop player sinking through horizonYpos
                 jumping = false;
             }
-            if(playerYpos > horizonYpos){
-                playerYpos = horizonYpos;
-            }
-            
         } //end of playerJump 
 
         function colorRect(x, y, w, h, c) { //drawing canvas and player
