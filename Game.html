@@ -67,12 +67,14 @@
         const RESTART_KEY = 82;
         var restartPressed = false;
 
-        //game variables
-        var score = 1;
+        //horizon variables
         var horizonYpos = 0;
         var horizonXpos = 0;
         var horizonWidth = 10;
         var horizonLength = 0;
+
+        //game variables
+        var score = 1;
         var gameFinished = false;
         var pauseKeyPressed = false;
         var singlePress = true;
@@ -249,7 +251,6 @@
                 drawCacti(imageAssets.object, object.objectXpos, object.objectYpos, object.objectSize, object.objectSize, 'blue'); //object individual base off index in array
             });
         } //end of objectDraw
-
         function objectMove() { //movement for the objects
             objects.forEach(function(object, i) {
                 if (gameFinished == true && restartPressed == true) {
@@ -371,7 +372,7 @@
             }
             if (playerYpos + PLAYER_SIZE >= horizonYpos) { //cannot jump more if player xpos is greater than the horizon line
                 playerYSpeed = 0;
-                playerYpos = horizonYpos - PLAYER_SIZE;//to stop player sinking through horizonYpos
+                playerYpos = horizonYpos - PLAYER_SIZE; //to stop player sinking through horizonYpos
                 jumping = false;
             }
         } //end of playerJump 
